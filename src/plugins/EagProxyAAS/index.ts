@@ -132,7 +132,7 @@ if (config.allowDirectConnectEndpoints) {
           // check if ip is public
           result.motd = new Promise(async (res) => {
             if (await isValidIp(ip)) {
-              res(await Motd.MOTD.generateMOTDFromPing(ip, Number(port), PluginManager.proxy.config.useNatives || true));
+              res(await Motd.MOTD.generateMOTDFromPing(ip, Number(port), PluginManager.proxy.config.useNatives ?? true));
             }
             res(null);
           });
