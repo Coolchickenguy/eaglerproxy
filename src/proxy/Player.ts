@@ -15,7 +15,7 @@ import { Socket } from "net";
 
 const { createSerializer, createDeserializer } = pkg;
 
-export class Player extends EventEmitter {
+export class Player extends EventEmitter<PlayerEvents> {
   public ws: WebSocket & { httpRequest: IncomingMessage; _socket: Socket };
   public username?: string;
   public skin?: EaglerSkins.EaglerSkin;
@@ -348,25 +348,17 @@ export class Player extends EventEmitter {
 }
 
 interface PlayerEvents {
-  switchServer: (connection: Client, player: Player) => void;
-  joinServer: (connection: Client, player: Player) => void;
+  switchServer: [connection: Client, player: Player];
+  joinServer: [connection: Client, player: Player];
   // for vanilla game packets, bind to connection object instead
-  proxyPacket: (packet: Packet, player: Player) => void;
-  vanillaPacket: (
+  proxyPacket: [packet: Packet, player: Player];
+  vanillaPacket: [
     packet: {
       name: string;
       params: any;
       cancel: boolean;
     },
     origin: "CLIENT" | "SERVER",
-    player: Player
-  ) => void;
-  disconnect: (player: Player) => void;
-}
-
-export declare interface Player {
-  on<U extends keyof PlayerEvents>(event: U, listener: PlayerEvents[U]): this;
-  once<U extends keyof PlayerEvents>(event: U, listener: PlayerEvents[U]): this;
-
-  emit<U extends keyof PlayerEvents>(event: U, ...args: Parameters<PlayerEvents[U]>): boolean;
+    player: Player];
+  disconnect: [player: Player];
 }

@@ -32,7 +32,7 @@ let instanceCount = 0;
 const chalk = new Chalk({ level: 2 });
 const motdMatcher = /^accept: motd/i;
 
-export class Proxy extends EventEmitter {
+export class Proxy extends EventEmitter<ProxyEvents> {
   public packetRegistry: Map<
     number,
     Packet & {
@@ -398,15 +398,10 @@ export class Proxy extends EventEmitter {
 }
 
 interface ProxyEvents {
-  playerConnect: (player: Player) => void;
-  playerDisconnect: (player: Player) => void;
-  fetchMotd: (ws: WebSocket, erq: http.IncomingMessage, result: { motd: Promise<Motd.MOTD> }) => void;
+  playerConnect: [player: Player];
+  playerDisconnect: [player: Player];
+  fetchMotd: [ws: WebSocket, erq: http.IncomingMessage, result: { motd: Promise<Motd.MOTD> }];
 
-  httpConnection: (req: http.IncomingMessage, res: http.ServerResponse, ctx: Util.Handlable) => void;
-  wsConnection: (ws: WebSocket, req: http.IncomingMessage, ctx: Util.Handlable) => void;
-}
-
-export declare interface Proxy {
-  on<U extends keyof ProxyEvents>(event: U, listener: ProxyEvents[U]): this;
-  emit<U extends keyof ProxyEvents>(event: U, ...args: Parameters<ProxyEvents[U]>): boolean;
+  httpConnection: [req: http.IncomingMessage, res: http.ServerResponse, ctx: Util.Handlable];
+  wsConnection: [ws: WebSocket, req: http.IncomingMessage, ctx: Util.Handlable];
 }

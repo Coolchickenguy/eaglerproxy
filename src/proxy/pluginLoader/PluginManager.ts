@@ -18,7 +18,7 @@ import { MineProtocol } from "../Protocol.js";
 import { EaglerSkins } from "../skins/EaglerSkins.js";
 import { BungeeUtil } from "../BungeeUtil.js";
 
-export class PluginManager extends EventEmitter {
+export class PluginManager extends EventEmitter<PluginManagerEvents> {
   public plugins: Map<string, { exports: any; metadata: PluginLoaderTypes.PluginMetadataPathed }>;
   public proxy: Proxy;
 
@@ -237,15 +237,7 @@ export class PluginManager extends EventEmitter {
 }
 
 interface PluginManagerEvents {
-  pluginLoad: (name: string, plugin: any) => void;
-  pluginsFinishLoading: (manager: PluginManager) => void;
-  proxyFinishLoading: (proxy: Proxy, manager: PluginManager) => void;
-}
-
-export declare interface PluginManager {
-  on<U extends keyof PluginManagerEvents>(event: U, listener: PluginManagerEvents[U]): this;
-
-  emit<U extends keyof PluginManagerEvents>(event: U, ...args: Parameters<PluginManagerEvents[U]>): boolean;
-
-  once<U extends keyof PluginManagerEvents>(event: U, listener: PluginManagerEvents[U]): this;
+  pluginLoad: [name: string, plugin: any];
+  pluginsFinishLoading: [manager: PluginManager];
+  proxyFinishLoading: [proxy: Proxy, manager: PluginManager];
 }
